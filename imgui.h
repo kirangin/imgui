@@ -701,7 +701,7 @@ namespace ImGui
     // - Not that MenuItem() keyboardshortcuts are displayed as a convenience but _not processed_ by Dear ImGui at the moment.
     IMGUI_API bool          BeginMenuBar();                                                     // append to menu-bar of current window (requires ImGuiWindowFlags_MenuBar flag set on parent window).
     IMGUI_API void          EndMenuBar();                                                       // only call EndMenuBar() if BeginMenuBar() returns true!
-    IMGUI_API bool          BeginMainMenuBar();                                                 // create and append to a full screen menu-bar.
+    IMGUI_API bool          BeginMainMenuBar(bool with_gradient = false);                                                 // create and append to a full screen menu-bar.
     IMGUI_API void          EndMainMenuBar();                                                   // only call EndMainMenuBar() if BeginMainMenuBar() returns true!
     IMGUI_API bool          BeginMenu(const char* label, bool enabled = true);                  // create a sub-menu entry. only call EndMenu() if this returns true!
     IMGUI_API void          EndMenu();                                                          // only call EndMenu() if BeginMenu() returns true!
@@ -1098,6 +1098,10 @@ enum ImGuiWindowFlags_
 #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
     ImGuiWindowFlags_AlwaysUseWindowPadding = 1 << 30,  // Obsoleted in 1.90: Use ImGuiChildFlags_AlwaysUseWindowPadding in BeginChild() call.
     ImGuiWindowFlags_NavFlattened           = 1 << 31,  // Obsoleted in 1.90.9: Use ImGuiChildFlags_NavFlattened in BeginChild() call.
+
+    // Custom flags
+    ImGuiWindowFlags_MenuBarGradient        = 1 << 31, // [Kincir Angin] Enable gradient background for menu-bar. Set the 
+                                                       // colors using ImGuiCol_MenuBarBgColor1 and ImGuiCol_MenuBarBgColor2
 #endif
 };
 
@@ -1651,6 +1655,8 @@ enum ImGuiCol_
     ImGuiCol_TitleBgActive,         // Title bar when focused
     ImGuiCol_TitleBgCollapsed,      // Title bar when collapsed
     ImGuiCol_MenuBarBg,
+    ImGuiCol_MenuBarBgColor1,       // This is for a menu bar with gradient background
+    ImGuiCol_MenuBarBgColor2,       // This is for a menu bar with gradient background
     ImGuiCol_ScrollbarBg,
     ImGuiCol_ScrollbarGrab,
     ImGuiCol_ScrollbarGrabHovered,

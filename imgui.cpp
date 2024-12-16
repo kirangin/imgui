@@ -3383,6 +3383,8 @@ const char* ImGui::GetStyleColorName(ImGuiCol idx)
     case ImGuiCol_TitleBgActive: return "TitleBgActive";
     case ImGuiCol_TitleBgCollapsed: return "TitleBgCollapsed";
     case ImGuiCol_MenuBarBg: return "MenuBarBg";
+    case ImGuiCol_MenuBarBgColor1: return "MenuBarBgColor1";
+    case ImGuiCol_MenuBarBgColor2: return "MenuBarBgColor2";
     case ImGuiCol_ScrollbarBg: return "ScrollbarBg";
     case ImGuiCol_ScrollbarGrab: return "ScrollbarGrab";
     case ImGuiCol_ScrollbarGrabHovered: return "ScrollbarGrabHovered";
@@ -6577,6 +6579,11 @@ static void ImGui::RenderWindowOuterBorders(ImGuiWindow* window)
     }
 }
 
+#ifndef DEBUG_WITH_IOSTREAM
+#define DEBUG_WITH_IOSTREAM
+#include <iostream>  // sprintf, vsnprintf
+#endif
+
 // Draw background and borders
 // Draw and handle scrollbars
 void ImGui::RenderWindowDecorations(ImGuiWindow* window, const ImRect& title_bar_rect, bool title_bar_is_highlight, bool handle_borders_and_resize_grips, int resize_grip_count, const ImU32 resize_grip_col[4], float resize_grip_draw_size)
@@ -6669,7 +6676,15 @@ void ImGui::RenderWindowDecorations(ImGuiWindow* window, const ImRect& title_bar
         {
             ImRect menu_bar_rect = window->MenuBarRect();
             menu_bar_rect.ClipWith(window->Rect());  // Soft clipping, in particular child window don't have minimum size covering the menu bar so this is useful for them.
-            window->DrawList->AddRectFilled(menu_bar_rect.Min + ImVec2(window_border_size, 0), menu_bar_rect.Max - ImVec2(window_border_size, 0), GetColorU32(ImGuiCol_MenuBarBg), (flags & ImGuiWindowFlags_NoTitleBar) ? window_rounding : 0.0f, ImDrawFlags_RoundCornersTop);
+            if (flags & ImGuiWindowFlags_MenuBarGradient) {
+                window->DrawList->AddRectFilledMultiColor(
+                    menu_bar_rect.Min + ImVec2(window_border_size, 0), menu_bar_rect.Max - ImVec2(window_border_size, 0),
+                    GetColorU32(ImGuiCol_MenuBarBgColor1), GetColorU32(ImGuiCol_MenuBarBgColor2), 
+                    GetColorU32(ImGuiCol_MenuBarBgColor2), GetColorU32(ImGuiCol_MenuBarBgColor1)
+                );
+            } else {
+                window->DrawList->AddRectFilled(menu_bar_rect.Min + ImVec2(window_border_size, 0), menu_bar_rect.Max - ImVec2(window_border_size, 0), GetColorU32(ImGuiCol_MenuBarBg), (flags & ImGuiWindowFlags_NoTitleBar) ? window_rounding : 0.0f, ImDrawFlags_RoundCornersTop);
+            }
             if (style.FrameBorderSize > 0.0f && menu_bar_rect.Max.y < window->Pos.y + window->Size.y)
                 window->DrawList->AddLine(menu_bar_rect.GetBL(), menu_bar_rect.GetBR(), GetColorU32(ImGuiCol_Border), style.FrameBorderSize);
         }
