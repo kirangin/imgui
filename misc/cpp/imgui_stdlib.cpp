@@ -80,6 +80,20 @@ bool ImGui::InputTextWithHint(const char* label, const char* hint, std::string* 
     return InputTextWithHint(label, hint, (char*)str->c_str(), str->capacity() + 1, flags, InputTextCallback, &cb_user_data);
 }
 
+bool ImGui::ComboVec(const char* label, int* current_item, const std::vector<std::string>& items, int popup_max_height_in_items)
+{
+    if (popup_max_height_in_items == -1)
+        popup_max_height_in_items = ImGui::GetTextLineHeight() * 16 / ImGui::GetFontSize();
+
+    // We need to use a temporary buffer to store the items
+    std::vector<const char*> item_ptrs;
+    item_ptrs.reserve(items.size());
+    for (const auto& item : items)
+        item_ptrs.push_back(item.c_str());
+
+    return Combo(label, current_item, item_ptrs.data(), (int)item_ptrs.size(), popup_max_height_in_items);
+}
+
 #if defined(__clang__)
 #pragma clang diagnostic pop
 #endif
