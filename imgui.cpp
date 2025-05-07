@@ -7274,6 +7274,29 @@ void ImGui::RenderWindowTitleBarContents(ImGuiWindow* window, const ImRect& titl
     ImGuiContext& g = *GImGui;
     ImGuiStyle& style = g.Style;
     ImGuiWindowFlags flags = window->Flags;
+    ImVec2 pattern_start = title_bar_rect.Min;
+
+    // Add retro diagonal pattern
+    const ImU32 pattern_color = GetColorU32(ImGuiCol_TitleBgPattern);
+    const float pattern_spacing = 6.0f;
+    const float pattern_thickness = 1.5f;
+
+    for (float offset = -title_bar_rect.GetHeight(); offset < title_bar_rect.GetWidth(); offset += pattern_spacing)
+    {
+        ImVec2 start = ImVec2(pattern_start.x + offset, pattern_start.y);
+        ImVec2 end = ImVec2(pattern_start.x + offset + title_bar_rect.GetHeight(), pattern_start.y + title_bar_rect.GetHeight());
+
+        // Clip pattern to title bar rectangle
+        start.x = ImClamp(start.x, title_bar_rect.Min.x, title_bar_rect.Max.x);
+        start.y = ImClamp(start.y, title_bar_rect.Min.y, title_bar_rect.Max.y);
+        end.x = ImClamp(end.x, title_bar_rect.Min.x, title_bar_rect.Max.x);
+        end.y = ImClamp(end.y, title_bar_rect.Min.y, title_bar_rect.Max.y);
+
+        if (start.x < end.x && start.y < end.y)
+        {
+            window->DrawList->AddLine(start, end, pattern_color, pattern_thickness);
+        }
+    }
 
     const bool has_close_button = (p_open != NULL);
     const bool has_collapse_button = !(flags & ImGuiWindowFlags_NoCollapse) && (style.WindowMenuButtonPosition != ImGuiDir_None);
@@ -8372,6 +8395,11 @@ bool ImGui::Begin(const char* name, bool* p_open, ImGuiWindowFlags flags)
             return false;
         }
 #endif
+
+// Debug:
+    // if (name != nullptr) {
+    //     ImGui::Text("Begin(%s)\n", name);
+    // }
 
     return !window->SkipItems;
 }
