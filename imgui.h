@@ -1136,16 +1136,16 @@ enum ImGuiWindowFlags_
     ImGuiWindowFlags_Tooltip                = 1 << 25,  // Don't use! For internal use by BeginTooltip()
     ImGuiWindowFlags_Popup                  = 1 << 26,  // Don't use! For internal use by BeginPopup()
     ImGuiWindowFlags_Modal                  = 1 << 27,  // Don't use! For internal use by BeginPopupModal()
-    ImGuiWindowFlags_ChildMenu              = 1 << 28,  // Don't use! For internal use by BeginMenu()
+    ImGuiWindowFlags_ChildMenu              = 1 << 28,  // Don't use! For internal use by BeginMenu(
+    
+    // Custom flags
+    ImGuiWindowFlags_MenuBarGradient        = 1 << 31, // [Kincir Angin] Enable gradient background for menu-bar. Set the 
+                                                       // colors using ImGuiCol_MenuBarBgColor1 and ImGuiCol_MenuBarBgColor2)
 
     // Obsolete names
 #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
     ImGuiWindowFlags_AlwaysUseWindowPadding = 1 << 30,  // Obsoleted in 1.90: Use ImGuiChildFlags_AlwaysUseWindowPadding in BeginChild() call.
     ImGuiWindowFlags_NavFlattened           = 1 << 31,  // Obsoleted in 1.90.9: Use ImGuiChildFlags_NavFlattened in BeginChild() call.
-
-    // Custom flags
-    ImGuiWindowFlags_MenuBarGradient        = 1 << 31, // [Kincir Angin] Enable gradient background for menu-bar. Set the 
-                                                       // colors using ImGuiCol_MenuBarBgColor1 and ImGuiCol_MenuBarBgColor2
 #endif
 };
 
